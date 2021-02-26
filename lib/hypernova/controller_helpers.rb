@@ -210,7 +210,11 @@ module Hypernova
 
       new_body.scan(RENDER_STATUS_REGEX) do |matched|
         if matched
-          render_result_without_cache
+          if controller.respond_to?(:response)
+            render_result_without_cache
+          else
+            raise SSRError.new('Server side rendering failed due to error in code.')
+          end
         end
       end
 
